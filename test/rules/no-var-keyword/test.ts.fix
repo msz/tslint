@@ -9,7 +9,7 @@ let i,
 
 let [a, b] = [1, 2];
 
-for (let n; false;);
+for (var n; false;);
 for (let n1 in foo);
 for (let n2 of foo);
 

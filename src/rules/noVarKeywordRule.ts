@@ -15,7 +15,14 @@
  * limitations under the License.
  */
 
-import { hasModifier, isBlockScopedVariableDeclarationList, isNodeFlagSet, isVariableDeclarationList, isVariableStatement } from "tsutils";
+import {
+    hasModifier,
+    isBlockScopedVariableDeclarationList,
+    isForStatement,
+    isNodeFlagSet,
+    isVariableDeclarationList,
+    isVariableStatement,
+} from "tsutils";
 import * as ts from "typescript";
 
 import * as Lint from "../index";
@@ -53,7 +60,9 @@ function walk(ctx: Lint.WalkContext<void>): void {
             const start = node.getStart(sourceFile);
             const width = "var".length;
             // Don't apply fix in a declaration file, because may have meant 'const'.
-            const fix = sourceFile.isDeclarationFile ? undefined : new Lint.Replacement(start, width, "let");
+            const fix = sourceFile.isDeclarationFile || isForStatement(parent)
+                ? undefined
+                : new Lint.Replacement(start, width, "let");
             ctx.addFailureAt(start, width, Rule.FAILURE_STRING, fix);
         }
 
